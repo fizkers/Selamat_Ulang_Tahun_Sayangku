@@ -142,6 +142,42 @@
             </div>
         </section>
 
+        <section id="stepDate" class="step-container step-hidden w-full flex flex-col items-center text-center">
+            <div class="cute-card w-full rounded-[32px] p-7 flex flex-col items-center relative">
+                <span class="px-3.5 py-1 rounded-full bg-pink-100 text-pink-600 font-cute-title text-xs font-bold mb-3">Verifikasi Spesial 🔐</span>
+                <div class="w-24 h-24 rounded-full bg-gradient-to-b from-pink-100 to-rose-200 flex items-center justify-center mb-4 shadow-inner animate-bounce-soft border-4 border-white">
+                    <span class="text-4xl">📅</span>
+                </div>
+                <h2 class="font-cute-title text-2xl sm:text-3xl font-bold text-pink-600 mb-2">Kapan Hari Lahirmu?</h2>
+                <p class="text-xs sm:text-sm text-pink-900/80 mb-5 leading-relaxed">
+                    Masukkan tanggal & bulan ulang tahunmu dulu ya cantik, biar pintu kejutannya kebuka! 💕
+                </p>
+                <div class="w-full flex gap-2.5 mb-5">
+                    <select id="birthDayInput" class="w-1/3 py-3.5 px-3 rounded-2xl bg-pink-50 border-2 border-pink-300 text-pink-700 font-cute-title font-bold text-sm text-center focus:outline-none focus:border-pink-500">
+                        <option value="">Tgl</option>
+                    </select>
+                    <select id="birthMonthInput" class="w-2/3 py-3.5 px-4 rounded-2xl bg-pink-50 border-2 border-pink-300 text-pink-700 font-cute-title font-bold text-sm text-center focus:outline-none focus:border-pink-500">
+                        <option value="">Pilih Bulan</option>
+                        <option value="Januari">Januari</option>
+                        <option value="Februari">Februari</option>
+                        <option value="Maret">Maret</option>
+                        <option value="April">April</option>
+                        <option value="Mei">Mei</option>
+                        <option value="Juni">Juni</option>
+                        <option value="Juli">Juli</option>
+                        <option value="Agustus">Agustus</option>
+                        <option value="September">September</option>
+                        <option value="Oktober">Oktober</option>
+                        <option value="November">November</option>
+                        <option value="Desember">Desember</option>
+                    </select>
+                </div>
+                <button onclick="verifyBirthday()" class="cute-btn w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-base">
+                    Cek Tanggal Spesial ✨
+                </button>
+            </div>
+        </section>
+
         <section id="step2" class="step-container step-hidden w-full flex flex-col items-center text-center">
             <div class="cute-card w-full rounded-[32px] p-7 flex flex-col items-center relative">
                 <span class="px-3.5 py-1 rounded-full bg-pink-100 text-pink-600 font-cute-title text-xs font-bold mb-3">Level 25 Unlocked ✨</span>
@@ -248,7 +284,7 @@
                 <div class="flex items-center gap-2 mb-3">
                     <span class="text-2xl animate-bounce">🎈</span>
                     <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 p-1.5 shadow-lg">
-                        <img src="assets/foto1.jpg" onerror="this.src='https://placehold.co/200x200/fbcfe8/9d174d?text=Riazul'" alt="Riazul Muna" class="w-full h-full object-cover rounded-full border-2 border-white">
+                        <img id="profileRoundImg" src="assets/WhatsApp Image 2026-11-13 at 13.55.08.jpeg" onerror="this.src='https://placehold.co/200x200/fbcfe8/9d174d?text=Riazul'" alt="Riazul Muna" class="w-full h-full object-cover rounded-full border-2 border-white">
                     </div>
                     <span class="text-2xl animate-bounce">🎈</span>
                 </div>
@@ -265,15 +301,20 @@
                     Riazul Muna
                 </h2>
 
-                <p class="text-xs sm:text-sm text-pink-950/85 leading-relaxed mb-5 bg-pink-50/80 p-3.5 rounded-2xl border border-pink-200">
+                <p class="text-xs sm:text-sm text-pink-950/85 leading-relaxed mb-4 bg-pink-50/80 p-3.5 rounded-2xl border border-pink-200">
                     Semoga di usia ke-25 ini kamu selalu dilimpahi kebahagiaan, kesehatan, rezeki yang lancar, dan cinta yang tak pernah habis. Terima kasih sudah menjadi bagian terindah dalam hidupku. I Love You So Much! 💕
                 </p>
+
+                <button onclick="openPosterPopup()" class="cute-btn w-full py-3.5 px-4 mb-2.5 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-600 text-white font-cute-title font-bold text-sm flex items-center justify-center gap-2">
+                    <span>Buat & Download Kartu Story IG / WA</span>
+                    <span>📲</span>
+                </button>
 
                 <div class="flex gap-2.5 w-full">
                     <button onclick="triggerConfettiBurst()" class="flex-1 py-3 px-3 rounded-2xl bg-pink-100 border-2 border-pink-300 text-pink-700 font-cute-title font-bold text-xs active:scale-95 transition">
                         Tabur Cinta 💖
                     </button>
-                    <button onclick="restartExperience()" class="cute-btn flex-1 py-3 px-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-xs">
+                    <button onclick="restartExperience()" class="flex-1 py-3 px-3 rounded-2xl bg-white border-2 border-pink-300 text-pink-600 font-cute-title font-bold text-xs active:scale-95 transition">
                         Ulangi Lagi 🔄
                     </button>
                 </div>
@@ -281,6 +322,56 @@
         </section>
 
     </main>
+
+    <div id="wrongDatePopup" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-gradient-to-b from-pink-100/95 via-rose-100/95 to-pink-200/95 backdrop-blur-xl p-6 text-center">
+        <div id="wrongDateCard" class="w-full max-w-sm bg-white p-7 rounded-[32px] shadow-2xl border-4 border-pink-300 relative cute-popup-enter flex flex-col items-center">
+            <div class="absolute -top-6 -left-3 text-4xl animate-wiggle">🙈</div>
+            <div class="absolute -top-6 -right-3 text-4xl animate-wiggle">💔</div>
+            <div class="w-24 h-24 rounded-full bg-rose-100 flex items-center justify-center mb-4 border-4 border-pink-200 shadow-inner">
+                <span class="text-5xl">🥺</span>
+            </div>
+            <span class="px-3.5 py-1 rounded-full bg-rose-100 text-rose-600 font-cute-title text-xs font-bold mb-2">
+                Eits, Salah Tanggal Nih!
+            </span>
+            <h3 class="font-cute-title text-2xl font-bold text-pink-600 mb-2">Bukan Tanggal Itu Sayang!</h3>
+            <p class="text-xs sm:text-sm text-pink-900/80 leading-relaxed mb-6">
+                Masa tanggal lahir sendiri lupa sih cantik? Coba diingat-ingat lagi tanggal spesialmu di bulan November ya! 💕
+            </p>
+            <button onclick="closeWrongDatePopup()" class="cute-btn w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-sm">
+                Coba Lagi Dong ✨
+            </button>
+        </div>
+    </div>
+
+    <div id="posterPopup" class="fixed inset-0 z-50 hidden flex-col items-center justify-between bg-gradient-to-b from-pink-100/95 via-rose-100/95 to-pink-200/95 backdrop-blur-xl p-4">
+        <div class="w-full max-w-md flex items-center justify-between pt-1">
+            <span class="px-3.5 py-1.5 rounded-full bg-white text-pink-600 font-cute-title text-xs font-bold shadow-sm border border-pink-200">
+                Kartu Story IG & WhatsApp ✨
+            </span>
+            <button onclick="closePosterPopup()" class="w-10 h-10 rounded-full bg-white text-pink-600 font-cute-title font-bold text-lg shadow-md border-2 border-pink-200 flex items-center justify-center active:scale-90 transition">
+                ✕
+            </button>
+        </div>
+
+        <div class="w-full max-w-md my-auto flex flex-col items-center justify-center overflow-hidden py-2">
+            <div class="bg-white p-2.5 rounded-[28px] shadow-2xl border-4 border-pink-300 relative cute-popup-enter flex items-center justify-center">
+                <canvas id="storyPosterCanvas" width="1080" height="1920" class="w-auto h-[62vh] max-w-full rounded-[20px] shadow-inner bg-pink-50"></canvas>
+            </div>
+            <p id="downloadStatusMsg" class="text-xs font-cute-title font-bold text-pink-600 mt-2 text-center">
+                Siap di-download & langsung upload ke Story! 💖
+            </p>
+        </div>
+
+        <div class="w-full max-w-md flex gap-3 pb-2">
+            <button onclick="closePosterPopup()" class="w-1/3 py-3.5 rounded-2xl bg-white text-pink-600 font-cute-title font-bold text-sm shadow-md border-2 border-pink-200 active:scale-95 transition">
+                Tutup
+            </button>
+            <button onclick="downloadStoryPoster()" class="cute-btn w-2/3 py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-sm flex items-center justify-center gap-2">
+                <span>Download Gambar</span>
+                <span>📥</span>
+            </button>
+        </div>
+    </div>
 
     <div id="fullCutePopup" class="fixed inset-0 z-50 hidden flex-col items-center justify-between bg-gradient-to-b from-pink-100/95 via-rose-100/95 to-pink-200/95 backdrop-blur-xl p-5">
         <div class="w-full max-w-md flex items-center justify-between pt-2">
@@ -517,24 +608,63 @@
             requestFullScreenMode();
             initAudio();
             triggerConfettiBurst();
-            goToStep(2);
+            goToStep('stepDate');
         }
 
-        function goToStep(stepNumber) {
-            for (let i = 1; i <= 5; i++) {
-                const el = document.getElementById(`step${i}`);
-                if (i === stepNumber) {
+        function initDateDropdown() {
+            const daySelect = document.getElementById('birthDayInput');
+            if (!daySelect) return;
+            for (let d = 1; d <= 31; d++) {
+                const opt = document.createElement('option');
+                opt.value = String(d);
+                opt.textContent = String(d);
+                daySelect.appendChild(opt);
+            }
+        }
+
+        function verifyBirthday() {
+            const dayVal = document.getElementById('birthDayInput').value;
+            const monthVal = document.getElementById('birthMonthInput').value;
+
+            if (dayVal === '22' && monthVal === 'November') {
+                triggerConfettiBurst();
+                goToStep(2);
+            } else {
+                const popup = document.getElementById('wrongDatePopup');
+                const card = document.getElementById('wrongDateCard');
+                card.classList.remove('cute-popup-enter');
+                void card.offsetWidth;
+                card.classList.add('cute-popup-enter');
+                popup.classList.remove('hidden');
+                popup.classList.add('flex');
+            }
+        }
+
+        function closeWrongDatePopup() {
+            const popup = document.getElementById('wrongDatePopup');
+            popup.classList.add('hidden');
+            popup.classList.remove('flex');
+        }
+
+        function goToStep(stepTarget) {
+            const allSteps = ['step1', 'stepDate', 'step2', 'step3', 'step4', 'step5'];
+            const targetId = typeof stepTarget === 'number' ? `step${stepTarget}` : stepTarget;
+
+            allSteps.forEach(id => {
+                const el = document.getElementById(id);
+                if (!el) return;
+                if (id === targetId) {
                     el.classList.remove('step-hidden');
                     el.classList.add('step-active');
                 } else {
                     el.classList.remove('step-active');
                     el.classList.add('step-hidden');
                 }
-            }
+            });
 
-            if (stepNumber === 3) {
+            if (targetId === 'step3') {
                 startTypewriter();
-            } else if (stepNumber === 5) {
+            } else if (targetId === 'step5') {
                 triggerConfettiBurst();
             }
         }
@@ -645,7 +775,250 @@
             document.getElementById('wishInstruction').innerText = "Pejamkan mata, sebutkan semua doa terbaikmu di usia 25 tahun ini, lalu pencet tombol tiup lilinnya ya!";
             document.getElementById('blowBtn').classList.remove('hidden');
             document.getElementById('nextToStep3').classList.add('hidden');
+            document.getElementById('birthDayInput').value = '';
+            document.getElementById('birthMonthInput').value = '';
             goToStep(1);
+        }
+
+        function loadImageSafe(src) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'anonymous';
+                img.onload = () => resolve(img);
+                img.onerror = () => resolve(null);
+                img.src = src;
+            });
+        }
+
+        function drawRoundedRectPath(ctx, x, y, width, height, radius) {
+            ctx.beginPath();
+            ctx.moveTo(x + radius, y);
+            ctx.lineTo(x + width - radius, y);
+            ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
+            ctx.lineTo(x + width, y + height - radius);
+            ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
+            ctx.lineTo(x + radius, y + height);
+            ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
+            ctx.lineTo(x, y + radius);
+            ctx.quadraticCurveTo(x, y, x + radius, y);
+            ctx.closePath();
+        }
+
+        function drawCoverImage(ctx, img, x, y, w, h) {
+            const imgRatio = img.width / img.height;
+            const targetRatio = w / h;
+            let sx = 0, sy = 0, sw = img.width, sh = img.height;
+            if (imgRatio > targetRatio) {
+                sw = img.height * targetRatio;
+                sx = (img.width - sw) / 2;
+            } else {
+                sh = img.width / targetRatio;
+                sy = (img.height - sh) / 2;
+            }
+            ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+        }
+
+        function wrapCanvasText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            let currentY = y;
+            for (let n = 0; n < words.length; n++) {
+                const testLine = line + words[n] + ' ';
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line.trim(), x, currentY);
+                    line = words[n] + ' ';
+                    currentY += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line.trim(), x, currentY);
+            return currentY;
+        }
+
+        async function openPosterPopup() {
+            const popup = document.getElementById('posterPopup');
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            document.getElementById('downloadStatusMsg').innerText = "Sedang merangkai kartu cantikmu... ✨";
+            await renderStoryPoster();
+            document.getElementById('downloadStatusMsg').innerText = "Siap di-download & langsung upload ke Story! 💖";
+            triggerConfettiBurst();
+        }
+
+        function closePosterPopup() {
+            const popup = document.getElementById('posterPopup');
+            popup.classList.add('hidden');
+            popup.classList.remove('flex');
+        }
+
+        async function renderStoryPoster() {
+            await document.fonts.ready;
+            const pCanvas = document.getElementById('storyPosterCanvas');
+            const pCtx = pCanvas.getContext('2d');
+            const W = 1080;
+            const H = 1920;
+
+            const bgGrad = pCtx.createLinearGradient(0, 0, W, H);
+            bgGrad.addColorStop(0, '#fff1f2');
+            bgGrad.addColorStop(0.5, '#fce7f3');
+            bgGrad.addColorStop(1, '#fbcfe8');
+            pCtx.fillStyle = bgGrad;
+            pCtx.fillRect(0, 0, W, H);
+
+            pCtx.fillStyle = 'rgba(244, 114, 182, 0.14)';
+            pCtx.beginPath();
+            pCtx.arc(140, 180, 180, 0, Math.PI * 2);
+            pCtx.fill();
+            pCtx.beginPath();
+            pCtx.arc(950, 1740, 220, 0, Math.PI * 2);
+            pCtx.fill();
+
+            pCtx.save();
+            drawRoundedRectPath(pCtx, 55, 55, W - 110, H - 110, 56);
+            pCtx.fillStyle = 'rgba(255, 255, 255, 0.92)';
+            pCtx.shadowColor = 'rgba(236, 72, 153, 0.22)';
+            pCtx.shadowBlur = 40;
+            pCtx.shadowOffsetY = 16;
+            pCtx.fill();
+            pCtx.lineWidth = 8;
+            pCtx.strokeStyle = '#f9a8d4';
+            pCtx.stroke();
+            pCtx.restore();
+
+            drawRoundedRectPath(pCtx, 310, 115, 460, 58, 29);
+            pCtx.fillStyle = '#ec4899';
+            pCtx.fill();
+            pCtx.fillStyle = '#ffffff';
+            pCtx.font = '700 26px "Fredoka", sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText('22 NOVEMBER • 25TH BIRTHDAY', W / 2, 153);
+
+            const loadedPhotos = await Promise.all(photosData.slice(0, 5).map(p => loadImageSafe(p.src)));
+            const profileImg = loadedPhotos[0];
+
+            const cx = W / 2;
+            const cy = 335;
+            const r = 125;
+
+            pCtx.save();
+            pCtx.beginPath();
+            pCtx.arc(cx, cy, r + 14, 0, Math.PI * 2);
+            const ringGrad = pCtx.createLinearGradient(cx - r, cy - r, cx + r, cy + r);
+            ringGrad.addColorStop(0, '#ec4899');
+            ringGrad.addColorStop(1, '#fb7185');
+            pCtx.fillStyle = ringGrad;
+            pCtx.fill();
+
+            pCtx.beginPath();
+            pCtx.arc(cx, cy, r, 0, Math.PI * 2);
+            pCtx.clip();
+            if (profileImg) {
+                drawCoverImage(pCtx, profileImg, cx - r, cy - r, r * 2, r * 2);
+            } else {
+                pCtx.fillStyle = '#fbcfe8';
+                pCtx.fillRect(cx - r, cy - r, r * 2, r * 2);
+            }
+            pCtx.restore();
+
+            pCtx.beginPath();
+            pCtx.arc(cx, cy, r, 0, Math.PI * 2);
+            pCtx.lineWidth = 8;
+            pCtx.strokeStyle = '#ffffff';
+            pCtx.stroke();
+
+            pCtx.fillStyle = '#db2777';
+            pCtx.font = '700 50px "Fredoka", sans-serif';
+            pCtx.textAlign = 'center';
+            pCtx.fillText('SELAMAT ULANG TAHUN', W / 2, 540);
+            pCtx.fillText('SAYANG YANG KE - 25', W / 2, 602);
+
+            pCtx.fillStyle = '#f43f5e';
+            pCtx.font = '400 78px "Pacifico", cursive';
+            pCtx.fillText('Riazul Muna', W / 2, 698);
+
+            const albumIndices = [1, 2, 3, 4];
+            const cardW = 420;
+            const cardH = 300;
+            const startX = 105;
+            const startY = 745;
+            const gapX = 30;
+            const gapY = 26;
+
+            albumIndices.forEach((photoIdx, idx) => {
+                const col = idx % 2;
+                const row = Math.floor(idx / 2);
+                const px = startX + col * (cardW + gapX);
+                const py = startY + row * (cardH + gapY);
+
+                pCtx.save();
+                drawRoundedRectPath(pCtx, px, py, cardW, cardH, 28);
+                pCtx.fillStyle = '#ffffff';
+                pCtx.shadowColor = 'rgba(219, 39, 119, 0.16)';
+                pCtx.shadowBlur = 16;
+                pCtx.fill();
+                pCtx.lineWidth = 6;
+                pCtx.strokeStyle = '#fbcfe8';
+                pCtx.stroke();
+                pCtx.clip();
+
+                const imgObj = loadedPhotos[photoIdx];
+                if (imgObj) {
+                    drawCoverImage(pCtx, imgObj, px, py, cardW, cardH);
+                } else {
+                    pCtx.fillStyle = '#fce7f3';
+                    pCtx.fillRect(px, py, cardW, cardH);
+                }
+                pCtx.restore();
+            });
+
+            const boxX = 105;
+            const boxY = 1410;
+            const boxW = W - 210;
+            const boxH = 265;
+
+            pCtx.save();
+            drawRoundedRectPath(pCtx, boxX, boxY, boxW, boxH, 32);
+            pCtx.fillStyle = '#fff1f2';
+            pCtx.fill();
+            pCtx.lineWidth = 4;
+            pCtx.strokeStyle = '#f9a8d4';
+            pCtx.stroke();
+            pCtx.restore();
+
+            pCtx.fillStyle = '#831843';
+            pCtx.font = '600 29px "Plus Jakarta Sans", sans-serif';
+            pCtx.textAlign = 'center';
+            const quoteText = '"Semoga di usia ke-25 ini kamu selalu dilimpahi kebahagiaan, kesehatan, rezeki yang lancar, dan cinta yang tak pernah habis. Terima kasih sudah menjadi bagian terindah dalam hidupku. I Love You So Much!"';
+            wrapCanvasText(pCtx, quoteText, W / 2, boxY + 58, boxW - 70, 42);
+
+            drawRoundedRectPath(pCtx, 230, 1715, 620, 95, 30);
+            pCtx.fillStyle = '#fce7f3';
+            pCtx.fill();
+            pCtx.lineWidth = 3;
+            pCtx.strokeStyle = '#f472b6';
+            pCtx.stroke();
+
+            pCtx.fillStyle = '#be185d';
+            pCtx.font = '600 24px "Plus Jakarta Sans", sans-serif';
+            pCtx.fillText('Dengan Penuh Cinta Dari :', W / 2, 1752);
+
+            pCtx.fillStyle = '#db2777';
+            pCtx.font = '700 32px "Fredoka", sans-serif';
+            pCtx.fillText('Pacar Tercinta (Muhammad Hafiz) 💕', W / 2, 1792);
+        }
+
+        function downloadStoryPoster() {
+            const pCanvas = document.getElementById('storyPosterCanvas');
+            const link = document.createElement('a');
+            link.download = 'Kartu-Ultah-25-Riazul-Muna.png';
+            link.href = pCanvas.toDataURL('image/png');
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            document.getElementById('downloadStatusMsg').innerText = "Berhasil disimpan ke Galeri! Siap di-post 💖";
+            triggerConfettiBurst();
         }
 
         const canvas = document.getElementById('particleCanvas');
@@ -730,6 +1103,7 @@
         }
 
         window.onload = function () {
+            initDateDropdown();
             buildMediaList();
             initParticles();
             animateParticles();
