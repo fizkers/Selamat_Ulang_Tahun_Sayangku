@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#fdf2f8">
+    <title>Selamat Ulang Tahun ke-25 Riazul Muna</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Pacifico&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top, #fff1f2 0%, #fce7f3 50%, #fbcfe8 100%);
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        .font-cute-title {
+            font-family: 'Fredoka', sans-serif;
+        }
+        .font-script {
+            font-family: 'Pacifico', cursive;
+        }
+        .step-container {
+            transition: opacity 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .step-hidden {
+            opacity: 0;
+            pointer-events: none;
+            transform: scale(0.85) translateY(30px);
+            position: absolute;
+        }
+        .step-active {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1) translateY(0);
+            position: relative;
+        }
+        @keyframes wiggle {
+            0%, 100% { transform: rotate(-4deg) scale(1); }
+            50% { transform: rotate(4deg) scale(1.06); }
+        }
+        .animate-wiggle {
+            animation: wiggle 2.2s ease-in-out infinite;
+        }
+        @keyframes bounceSoft {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        .animate-bounce-soft {
+            animation: bounceSoft 2s ease-in-out infinite;
+        }
+        @keyframes popIn {
+            0% { opacity: 0; transform: scale(0.7) translateY(40px); }
+            70% { opacity: 1; transform: scale(1.03) translateY(-4px); }
+            100% { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        .cute-popup-enter {
+            animation: popIn 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+        .cute-card {
+            background: rgba(255, 255, 255, 0.88);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 3px solid #ffffff;
+            box-shadow: 0 18px 35px -10px rgba(244, 63, 94, 0.22), 0 0 0 4px rgba(251, 207, 232, 0.5);
+        }
+        .cute-btn {
+            box-shadow: 0 6px 0 #be185d;
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+        }
+        .cute-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #be185d;
+        }
+        .polaroid-cute {
+            background: #ffffff;
+            padding: 8px 8px 22px 8px;
+            border-radius: 18px;
+            border: 2px solid #fbcfe8;
+            box-shadow: 0 8px 18px -4px rgba(236, 72, 153, 0.18);
+            transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        .polaroid-cute:active {
+            transform: scale(0.95);
+        }
+        .custom-scroll::-webkit-scrollbar {
+            width: 5px;
+        }
+        .custom-scroll::-webkit-scrollbar-track {
+            background: rgba(252, 231, 243, 0.5);
+            border-radius: 10px;
+        }
+        .custom-scroll::-webkit-scrollbar-thumb {
+            background: #f472b6;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body class="w-screen h-screen flex items-center justify-center relative text-pink-950">
+
+    <audio id="bgMusic" loop preload="auto">
+        <source src="assets/lagu.mp3" type="audio/mpeg">
+    </audio>
+
+    <canvas id="particleCanvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <button id="musicControl" onclick="toggleMusic()" class="fixed top-4 right-4 z-40 cute-card p-3 rounded-full text-pink-600 hidden items-center justify-center active:scale-90 transition">
+        <svg id="musicOnIcon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+        </svg>
+        <svg id="musicOffIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15zM17 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2"></path>
+        </svg>
+    </button>
+
+    <main class="w-full max-w-md h-full flex flex-col items-center justify-center px-4 py-5 z-10 relative">
+
+        <section id="step1" class="step-container step-active w-full flex flex-col items-center text-center">
+            <div class="cute-card w-full rounded-[32px] p-7 flex flex-col items-center relative">
+                <div class="absolute -top-6 bg-pink-500 text-white text-xs font-cute-title font-bold px-4 py-1.5 rounded-full shadow-md border-2 border-white">
+                    SPECIAL DELIVERY FOR YOU
+                </div>
+                <div class="w-28 h-28 rounded-full bg-gradient-to-b from-pink-100 to-rose-200 flex items-center justify-center mb-4 mt-2 shadow-inner animate-wiggle border-4 border-white">
+                    <span class="text-5xl">🎀</span>
+                </div>
+                <span class="text-xs font-bold uppercase tracking-widest text-pink-500 mb-1">Hai Cantikku</span>
+                <h1 class="font-cute-title text-3xl sm:text-4xl font-bold text-pink-600 mb-2">Riazul Muna 💕</h1>
+                <p class="text-sm text-pink-900/80 leading-relaxed mb-7">
+                    Ada paket kebahagiaan super gemas yang cuma boleh dibuka sama orang paling manis hari ini. Sentuh tombol di bawah ya!
+                </p>
+                <button onclick="startExperience()" class="cute-btn w-full py-4 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-base flex items-center justify-center gap-2">
+                    <span>Buka Kado Sekarang</span>
+                    <span class="text-xl">🎁</span>
+                </button>
+            </div>
+        </section>
+
+        <section id="step2" class="step-container step-hidden w-full flex flex-col items-center text-center">
+            <div class="cute-card w-full rounded-[32px] p-7 flex flex-col items-center relative">
+                <span class="px-3.5 py-1 rounded-full bg-pink-100 text-pink-600 font-cute-title text-xs font-bold mb-3">Level 25 Unlocked ✨</span>
+                <div class="mb-3 animate-bounce-soft cursor-pointer" onclick="blowCandle()">
+                    <svg class="w-32 h-32" viewBox="0 0 120 120">
+                        <ellipse cx="60" cy="105" rx="45" ry="8" fill="#fbcfe8"/>
+                        <rect x="24" y="66" width="72" height="36" rx="12" fill="#f472b6"/>
+                        <rect x="32" y="44" width="56" height="26" rx="10" fill="#fce7f3"/>
+                        <path d="M24 76 Q36 86 48 76 T72 76 T96 76" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+                        <circle cx="42" cy="56" r="3" fill="#ec4899"/>
+                        <circle cx="60" cy="58" r="3" fill="#ec4899"/>
+                        <circle cx="78" cy="56" r="3" fill="#ec4899"/>
+                        <rect x="56" y="24" width="8" height="20" rx="4" fill="#fb7185"/>
+                        <path id="candleFlame" d="M60 6 C67 16 67 22 60 24 C53 22 53 16 60 6 Z" fill="#fbbf24" class="origin-bottom transition-all duration-500"/>
+                    </svg>
+                </div>
+                <h2 class="font-cute-title text-3xl font-bold text-pink-600 mb-2">Make a Wish, Sayang!</h2>
+                <p id="wishInstruction" class="text-sm text-pink-900/80 mb-6 leading-relaxed">
+                    Pejamkan mata, sebutkan semua doa terbaikmu di usia 25 tahun ini, lalu pencet tombol tiup lilinnya ya!
+                </p>
+                <button id="blowBtn" onclick="blowCandle()" class="cute-btn w-full py-3.5 px-6 rounded-2xl bg-pink-500 text-white font-cute-title font-bold text-base">
+                    Tiup Lilin Kue 🎂
+                </button>
+                <button id="nextToStep3" onclick="goToStep(3)" class="hidden cute-btn w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-base">
+                    Baca Surat Cinta 💌
+                </button>
+            </div>
+        </section>
+
+        <section id="step3" class="step-container step-hidden w-full flex flex-col items-center">
+            <div class="cute-card w-full rounded-[32px] p-6 flex flex-col">
+                <div class="flex items-center justify-between border-b-2 border-pink-100 pb-3 mb-4">
+                    <div class="flex items-center gap-2">
+                        <span class="text-2xl">💌</span>
+                        <span class="font-cute-title text-xl font-bold text-pink-600">Untuk Riazul Muna</span>
+                    </div>
+                    <span class="text-xs font-cute-title font-bold px-3 py-1 rounded-full bg-pink-100 text-pink-600">25th</span>
+                </div>
+                <div class="max-h-60 overflow-y-auto custom-scroll pr-2 text-left text-sm text-pink-950/90 leading-relaxed font-medium">
+                    <p id="typewriterText"></p>
+                </div>
+                <button id="nextToStep4" onclick="goToStep(4)" class="cute-btn mt-5 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-sm opacity-0 pointer-events-none transition-opacity duration-500">
+                    Buka Album Foto & Video 📸
+                </button>
+            </div>
+        </section>
+
+        <section id="step4" class="step-container step-hidden w-full h-full flex flex-col items-center justify-center">
+            <div class="cute-card w-full max-h-[88vh] rounded-[32px] p-5 flex flex-col">
+                <div class="text-center mb-3">
+                    <span class="text-[11px] font-cute-title font-bold uppercase tracking-wider text-pink-500 bg-pink-100 px-3 py-0.5 rounded-full">Galeri Kenangan Kita</span>
+                    <h2 class="font-cute-title text-2xl font-bold text-pink-600 mt-1">Foto & Video Gemas 💖</h2>
+                    <p class="text-[11px] text-pink-700/80">Sentuh foto atau video untuk layar penuh!</p>
+                </div>
+
+                <div class="overflow-y-auto custom-scroll pr-1 flex-1 space-y-4 pb-2">
+                    <div>
+                        <p class="text-xs font-cute-title font-bold text-pink-600 mb-2 flex items-center gap-1">
+                            <span>🎥</span> Video Spesial (2 Frame)
+                        </p>
+                        <div class="grid grid-cols-2 gap-2.5">
+                            <div class="polaroid-cute relative cursor-pointer" onclick="openMediaPopup('video', 0)">
+                                <div class="aspect-[9/12] rounded-xl overflow-hidden bg-pink-200 relative">
+                                    <video src="assets/video1.mp4" muted loop autoplay playsinline class="w-full h-full object-cover"></video>
+                                    <div class="absolute inset-0 bg-pink-900/20 flex items-center justify-center">
+                                        <div class="w-10 h-10 rounded-full bg-white/90 text-pink-600 flex items-center justify-center shadow-md">
+                                            ▶
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="font-cute-title text-center text-xs font-bold text-pink-700 mt-1.5">Video Momen 1</p>
+                            </div>
+
+                            <div class="polaroid-cute relative cursor-pointer" onclick="openMediaPopup('video', 1)">
+                                <div class="aspect-[9/12] rounded-xl overflow-hidden bg-pink-200 relative">
+                                    <video src="assets/video2.mp4" muted loop autoplay playsinline class="w-full h-full object-cover"></video>
+                                    <div class="absolute inset-0 bg-pink-900/20 flex items-center justify-center">
+                                        <div class="w-10 h-10 rounded-full bg-white/90 text-pink-600 flex items-center justify-center shadow-md">
+                                            ▶
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="font-cute-title text-center text-xs font-bold text-pink-700 mt-1.5">Video Momen 2</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-xs font-cute-title font-bold text-pink-600 mb-2 flex items-center gap-1">
+                            <span>📷</span> Album Foto Kita (8 Lembar)
+                        </p>
+                        <div id="photoGrid" class="grid grid-cols-2 gap-2.5"></div>
+                    </div>
+                </div>
+
+                <button onclick="goToStep(5)" class="cute-btn mt-3 w-full py-3.5 px-6 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-sm">
+                    Lihat Kejutan Utama 🎉
+                </button>
+            </div>
+        </section>
+
+        <section id="step5" class="step-container step-hidden w-full flex flex-col items-center text-center">
+            <div class="cute-card w-full rounded-[32px] p-6 flex flex-col items-center relative overflow-hidden">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="text-2xl animate-bounce">🎈</span>
+                    <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-pink-500 to-rose-400 p-1.5 shadow-lg">
+                        <img src="assets/foto1.jpg" onerror="this.src='https://placehold.co/200x200/fbcfe8/9d174d?text=Riazul'" alt="Riazul Muna" class="w-full h-full object-cover rounded-full border-2 border-white">
+                    </div>
+                    <span class="text-2xl animate-bounce">🎈</span>
+                </div>
+
+                <span class="px-3.5 py-1 rounded-full bg-pink-500 text-white font-cute-title text-xs font-bold mb-2 shadow-sm">
+                    25TH BIRTHDAY CELEBRATION
+                </span>
+
+                <h1 class="font-cute-title text-2xl sm:text-3xl font-extrabold text-pink-600 leading-tight mb-1 tracking-tight">
+                    SELAMAT ULANG TAHUN SAYANG YANG KE - 25
+                </h1>
+
+                <h2 class="font-script text-3xl sm:text-4xl text-rose-500 mb-3 drop-shadow-sm">
+                    Riazul Muna
+                </h2>
+
+                <p class="text-xs sm:text-sm text-pink-950/85 leading-relaxed mb-5 bg-pink-50/80 p-3.5 rounded-2xl border border-pink-200">
+                    Semoga di usia ke-25 ini kamu selalu dilimpahi kebahagiaan, kesehatan, rezeki yang lancar, dan cinta yang tak pernah habis. Terima kasih sudah menjadi bagian terindah dalam hidupku. I Love You So Much! 💕
+                </p>
+
+                <div class="flex gap-2.5 w-full">
+                    <button onclick="triggerConfettiBurst()" class="flex-1 py-3 px-3 rounded-2xl bg-pink-100 border-2 border-pink-300 text-pink-700 font-cute-title font-bold text-xs active:scale-95 transition">
+                        Tabur Cinta 💖
+                    </button>
+                    <button onclick="restartExperience()" class="cute-btn flex-1 py-3 px-3 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-xs">
+                        Ulangi Lagi 🔄
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="fullCutePopup" class="fixed inset-0 z-50 hidden flex-col items-center justify-between bg-gradient-to-b from-pink-100/95 via-rose-100/95 to-pink-200/95 backdrop-blur-xl p-5">
+        <div class="w-full max-w-md flex items-center justify-between pt-2">
+            <span id="popupBadge" class="px-3.5 py-1.5 rounded-full bg-white text-pink-600 font-cute-title text-xs font-bold shadow-sm border border-pink-200">
+                Kenangan Kita ✨
+            </span>
+            <button onclick="closeMediaPopup()" class="w-10 h-10 rounded-full bg-white text-pink-600 font-cute-title font-bold text-lg shadow-md border-2 border-pink-200 flex items-center justify-center active:scale-90 transition">
+                ✕
+            </button>
+        </div>
+
+        <div id="popupCardContainer" class="w-full max-w-md my-auto bg-white p-3.5 pb-6 rounded-[28px] shadow-2xl border-4 border-pink-300 relative cute-popup-enter">
+            <div class="absolute -top-5 -left-3 text-3xl animate-wiggle">🌸</div>
+            <div class="absolute -top-5 -right-3 text-3xl animate-wiggle">💖</div>
+
+            <div class="w-full aspect-[4/4] sm:aspect-square rounded-2xl overflow-hidden bg-pink-50 flex items-center justify-center relative">
+                <img id="popupImage" src="" alt="Kenangan" class="hidden w-full h-full object-cover">
+                <video id="popupVideo" src="" controls playsinline class="hidden w-full h-full object-cover"></video>
+            </div>
+
+            <div class="mt-4 text-center px-2">
+                <h3 id="popupTitle" class="font-cute-title text-2xl font-bold text-pink-600"></h3>
+                <p id="popupCaption" class="text-xs sm:text-sm text-pink-900/80 mt-1.5 leading-relaxed"></p>
+            </div>
+        </div>
+
+        <div class="w-full max-w-md flex gap-3 pb-2">
+            <button onclick="navigateMedia(-1)" class="flex-1 py-3.5 rounded-2xl bg-white text-pink-600 font-cute-title font-bold text-sm shadow-md border-2 border-pink-200 active:scale-95 transition">
+                ⬅ Sebelumnya
+            </button>
+            <button onclick="navigateMedia(1)" class="cute-btn flex-1 py-3.5 rounded-2xl bg-gradient-to-r from-pink-500 to-rose-500 text-white font-cute-title font-bold text-sm">
+                Selanjutnya ➡
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const videosData = [
+            {
+                src: "assets/video1.mp4",
+                title: "Video Momen Pertama 🎬",
+                caption: "Setiap detik jalan bareng kamu selalu terasa seru dan bikin kangen terus."
+            },
+            {
+                src: "assets/video2.mp4",
+                title: "Video Tawa Bahagia 🎥",
+                caption: "Semoga tawa ceria kamu di video ini selalu ada di setiap hari-harimu ya Riazul Muna!"
+            }
+        ];
+
+        const photosData = [
+            {
+                src: "assets/foto1.jpg",
+                title: "Awal Cerita Kita 💕",
+                caption: "Hari pertama semuanya dimulai dan jadi cerita terindah dalam hidupku."
+            },
+            {
+                src: "assets/foto2.jpg",
+                title: "Senyum Paling Manis 😊",
+                caption: "Senyummu selalu jadi obat capek paling ampuh setiap hari."
+            },
+            {
+                src: "assets/foto3.jpg",
+                title: "Jalan-Jalan Berdua 🌸",
+                caption: "Ke mana pun perginya, kalau sama kamu pasti selalu menyenangkan."
+            },
+            {
+                src: "assets/foto4.jpg",
+                title: "Momen Favoritku ✨",
+                caption: "Salah satu foto favorit yang selalu bikin aku bersyukur punya kamu."
+            },
+            {
+                src: "assets/foto5.jpg",
+                title: "Saling Menguatkan 🤝",
+                caption: "Terima kasih sudah selalu sabar dan ada di sampingku dalam keadaan apa pun."
+            },
+            {
+                src: "assets/foto6.jpg",
+                title: "Cerita Seru Kita 🎀",
+                caption: "Banyak hal lucu yang sudah kita lewati, dan masih banyak lagi ke depannya."
+            },
+            {
+                src: "assets/foto7.jpg",
+                title: "Bahagia Selalu 🌷",
+                caption: "Di usia 25 tahun ini, semoga makin banyak hal baik yang datang ke kamu."
+            },
+            {
+                src: "assets/foto8.jpg",
+                title: "Selamanya Bersamamu 💖",
+                caption: "Selamat ulang tahun ke-25 sayangku Riazul Muna, aku sayang kamu!"
+            }
+        ];
+
+        const loveLetter = "Selamat ulang tahun yang ke-25 sayangku, Riazul Muna.\n\nHari ini adalah hari yang sangat spesial karena tepat 25 tahun lalu, seseorang yang paling berharga dan paling manis hadir ke dunia ini.\n\nTerima kasih sudah menjadi alasan di balik senyumku setiap hari. Terima kasih atas segala perhatian, tawa, dan kehangatan yang selalu kamu berikan. Di usia baru ini, semoga semua impian yang kamu semogakan satu per satu terwujud, selalu diberi kesehatan, dan kebahagiaan yang melimpah.\n\nAku akan selalu ada di sini untuk mendukung dan menyayangimu. Selamat ulang tahun ya cintaku!";
+
+        let isMusicPlaying = false;
+        let useFallbackMusic = false;
+        let melodyLoop = null;
+        let synth = null;
+        let currentMediaIndex = 0;
+        let allMediaItems = [];
+
+        function buildMediaList() {
+            allMediaItems = [
+                ...videosData.map(v => ({ ...v, type: 'video' })),
+                ...photosData.map(p => ({ ...p, type: 'photo' }))
+            ];
+
+            const grid = document.getElementById('photoGrid');
+            grid.innerHTML = '';
+            photosData.forEach((photo, index) => {
+                const card = document.createElement('div');
+                card.className = 'polaroid-cute cursor-pointer';
+                card.onclick = () => openMediaPopup('photo', index);
+                card.innerHTML = `
+                    <div class="aspect-square rounded-xl overflow-hidden bg-pink-100">
+                        <img src="${photo.src}" onerror="this.src='https://placehold.co/300x300/fce7f3/db2777?text=Foto+${index + 1}'" alt="${photo.title}" class="w-full h-full object-cover">
+                    </div>
+                    <p class="font-cute-title text-center text-[11px] font-bold text-pink-700 mt-1.5 truncate">${photo.title}</p>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function requestFullScreenMode() {
+            const elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen().catch(() => {});
+            } else if (elem.webkitRequestFullscreen) {
+                elem.webkitRequestFullscreen();
+            } else if (elem.msRequestFullscreen) {
+                elem.msRequestFullscreen();
+            }
+        }
+
+        async function initAudio() {
+            const bgMusic = document.getElementById('bgMusic');
+            try {
+                await bgMusic.play();
+                isMusicPlaying = true;
+                useFallbackMusic = false;
+                updateMusicUI();
+            } catch (err) {
+                useFallbackMusic = true;
+                await startFallbackMusicBox();
+            }
+        }
+
+        async function startFallbackMusicBox() {
+            await Tone.start();
+            synth = new Tone.PolySynth(Tone.Synth, {
+                oscillator: { type: "sine" },
+                envelope: { attack: 0.05, decay: 0.3, sustain: 0.4, release: 1.2 }
+            }).toDestination();
+            synth.volume.value = -8;
+
+            const notes = [
+                { time: "0:0", note: "C4", duration: "8n" },
+                { time: "0:0:2", note: "C4", duration: "8n" },
+                { time: "0:1", note: "D4", duration: "4n" },
+                { time: "0:2", note: "C4", duration: "4n" },
+                { time: "0:3", note: "F4", duration: "4n" },
+                { time: "1:0", note: "E4", duration: "2n" },
+
+                { time: "1:2", note: "C4", duration: "8n" },
+                { time: "1:2:2", note: "C4", duration: "8n" },
+                { time: "1:3", note: "D4", duration: "4n" },
+                { time: "2:0", note: "C4", duration: "4n" },
+                { time: "2:1", note: "G4", duration: "4n" },
+                { time: "2:2", note: "F4", duration: "2n" },
+
+                { time: "3:0", note: "C4", duration: "8n" },
+                { time: "3:0:2", note: "C4", duration: "8n" },
+                { time: "3:1", note: "C5", duration: "4n" },
+                { time: "3:2", note: "A4", duration: "4n" },
+                { time: "3:3", note: "F4", duration: "4n" },
+                { time: "4:0", note: "E4", duration: "4n" },
+                { time: "4:1", note: "D4", duration: "2n" },
+
+                { time: "4:3", note: "Bb4", duration: "8n" },
+                { time: "4:3:2", note: "Bb4", duration: "8n" },
+                { time: "5:0", note: "A4", duration: "4n" },
+                { time: "5:1", note: "F4", duration: "4n" },
+                { time: "5:2", note: "G4", duration: "4n" },
+                { time: "5:3", note: "F4", duration: "2n" }
+            ];
+
+            melodyLoop = new Tone.Part((time, value) => {
+                synth.triggerAttackRelease(value.note, value.duration, time);
+            }, notes);
+
+            melodyLoop.loop = true;
+            melodyLoop.loopEnd = "6:2";
+            Tone.Transport.bpm.value = 96;
+            Tone.Transport.start();
+            melodyLoop.start(0);
+            isMusicPlaying = true;
+            updateMusicUI();
+        }
+
+        function updateMusicUI() {
+            document.getElementById('musicControl').classList.remove('hidden');
+            document.getElementById('musicControl').classList.add('flex');
+            if (isMusicPlaying) {
+                document.getElementById('musicOnIcon').classList.remove('hidden');
+                document.getElementById('musicOffIcon').classList.add('hidden');
+            } else {
+                document.getElementById('musicOnIcon').classList.add('hidden');
+                document.getElementById('musicOffIcon').classList.remove('hidden');
+            }
+        }
+
+        function toggleMusic() {
+            const bgMusic = document.getElementById('bgMusic');
+            if (isMusicPlaying) {
+                if (useFallbackMusic) {
+                    Tone.Transport.pause();
+                } else {
+                    bgMusic.pause();
+                }
+                isMusicPlaying = false;
+            } else {
+                if (useFallbackMusic) {
+                    Tone.Transport.start();
+                } else {
+                    bgMusic.play();
+                }
+                isMusicPlaying = true;
+            }
+            updateMusicUI();
+        }
+
+        function startExperience() {
+            requestFullScreenMode();
+            initAudio();
+            triggerConfettiBurst();
+            goToStep(2);
+        }
+
+        function goToStep(stepNumber) {
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`step${i}`);
+                if (i === stepNumber) {
+                    el.classList.remove('step-hidden');
+                    el.classList.add('step-active');
+                } else {
+                    el.classList.remove('step-active');
+                    el.classList.add('step-hidden');
+                }
+            }
+
+            if (stepNumber === 3) {
+                startTypewriter();
+            } else if (stepNumber === 5) {
+                triggerConfettiBurst();
+            }
+        }
+
+        function blowCandle() {
+            const flame = document.getElementById('candleFlame');
+            if (flame.style.opacity === '0') return;
+
+            flame.style.transform = 'scale(0)';
+            flame.style.opacity = '0';
+
+            document.getElementById('wishInstruction').innerText = "Yeay! Lilin sudah padam. Semoga semua harapan baik Riazul Muna dikabulkan tahun ini! 💖";
+            document.getElementById('blowBtn').classList.add('hidden');
+            document.getElementById('nextToStep3').classList.remove('hidden');
+            triggerConfettiBurst();
+        }
+
+        let typingTimer = null;
+        function startTypewriter() {
+            const target = document.getElementById('typewriterText');
+            const nextBtn = document.getElementById('nextToStep4');
+            target.innerHTML = '';
+            nextBtn.classList.add('opacity-0', 'pointer-events-none');
+
+            let idx = 0;
+            clearInterval(typingTimer);
+            typingTimer = setInterval(() => {
+                if (idx < loveLetter.length) {
+                    const char = loveLetter.charAt(idx);
+                    target.innerHTML += char === '\n' ? '<br>' : char;
+                    idx++;
+                } else {
+                    clearInterval(typingTimer);
+                    nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+                }
+            }, 30);
+        }
+
+        function openMediaPopup(type, index) {
+            currentMediaIndex = type === 'video' ? index : videosData.length + index;
+            renderPopupContent();
+            const popup = document.getElementById('fullCutePopup');
+            popup.classList.remove('hidden');
+            popup.classList.add('flex');
+            triggerConfettiBurst();
+        }
+
+        function renderPopupContent() {
+            const item = allMediaItems[currentMediaIndex];
+            const popupImg = document.getElementById('popupImage');
+            const popupVid = document.getElementById('popupVideo');
+            const bgMusic = document.getElementById('bgMusic');
+            const cardContainer = document.getElementById('popupCardContainer');
+
+            cardContainer.classList.remove('cute-popup-enter');
+            void cardContainer.offsetWidth;
+            cardContainer.classList.add('cute-popup-enter');
+
+            document.getElementById('popupBadge').innerText = `Kenangan ${currentMediaIndex + 1} dari ${allMediaItems.length} ✨`;
+            document.getElementById('popupTitle').innerText = item.title;
+            document.getElementById('popupCaption').innerText = item.caption;
+
+            if (item.type === 'video') {
+                popupImg.classList.add('hidden');
+                popupVid.classList.remove('hidden');
+                popupVid.src = item.src;
+                popupVid.play().catch(() => {});
+                if (!useFallbackMusic && isMusicPlaying) {
+                    bgMusic.pause();
+                }
+            } else {
+                popupVid.pause();
+                popupVid.classList.add('hidden');
+                popupImg.classList.remove('hidden');
+                popupImg.src = item.src;
+                popupImg.onerror = () => {
+                    popupImg.src = `https://placehold.co/500x500/fce7f3/db2777?text=${encodeURIComponent(item.title)}`;
+                };
+                if (!useFallbackMusic && isMusicPlaying) {
+                    bgMusic.play().catch(() => {});
+                }
+            }
+        }
+
+        function navigateMedia(direction) {
+            currentMediaIndex = (currentMediaIndex + direction + allMediaItems.length) % allMediaItems.length;
+            renderPopupContent();
+        }
+
+        function closeMediaPopup() {
+            const popup = document.getElementById('fullCutePopup');
+            const popupVid = document.getElementById('popupVideo');
+            const bgMusic = document.getElementById('bgMusic');
+
+            popupVid.pause();
+            popup.classList.add('hidden');
+            popup.classList.remove('flex');
+
+            if (!useFallbackMusic && isMusicPlaying) {
+                bgMusic.play().catch(() => {});
+            }
+        }
+
+        function restartExperience() {
+            const flame = document.getElementById('candleFlame');
+            flame.style.transform = 'scale(1)';
+            flame.style.opacity = '1';
+            document.getElementById('wishInstruction').innerText = "Pejamkan mata, sebutkan semua doa terbaikmu di usia 25 tahun ini, lalu pencet tombol tiup lilinnya ya!";
+            document.getElementById('blowBtn').classList.remove('hidden');
+            document.getElementById('nextToStep3').classList.add('hidden');
+            goToStep(1);
+        }
+
+        const canvas = document.getElementById('particleCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class HeartParticle {
+            constructor(burst = false) {
+                this.reset(burst);
+            }
+            reset(burst) {
+                this.x = burst ? canvas.width / 2 + (Math.random() - 0.5) * 140 : Math.random() * canvas.width;
+                this.y = burst ? canvas.height / 2 : canvas.height + 20;
+                this.size = Math.random() * 11 + 7;
+                this.speedY = burst ? (Math.random() - 0.8) * 9 : -(Math.random() * 1.4 + 0.6);
+                this.speedX = (Math.random() - 0.5) * (burst ? 9 : 1.2);
+                this.opacity = Math.random() * 0.6 + 0.35;
+                const colors = ['#f43f5e', '#ec4899', '#db2777', '#f472b6', '#fda4af'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.burst = burst;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                if (this.burst) {
+                    this.speedY += 0.16;
+                    this.opacity -= 0.014;
+                } else if (this.y < -20) {
+                    this.reset(false);
+                }
+            }
+            draw() {
+                if (this.opacity <= 0) return;
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = this.color;
+                ctx.beginPath();
+                const topCurveHeight = this.size * 0.3;
+                ctx.moveTo(this.x, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + (this.size + topCurveHeight) / 1.4, this.x, this.y + this.size);
+                ctx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 1.4, this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight);
+                ctx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 28; i++) {
+                const p = new HeartParticle(false);
+                p.y = Math.random() * canvas.height;
+                particles.push(p);
+            }
+        }
+
+        function triggerConfettiBurst() {
+            for (let i = 0; i < 38; i++) {
+                particles.push(new HeartParticle(true));
+            }
+        }
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            for (let i = particles.length - 1; i >= 0; i--) {
+                particles[i].update();
+                particles[i].draw();
+                if (particles[i].burst && particles[i].opacity <= 0) {
+                    particles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateParticles);
+        }
+
+        window.onload = function () {
+            buildMediaList();
+            initParticles();
+            animateParticles();
+        };
+    </script>
+</body>
+</html>
